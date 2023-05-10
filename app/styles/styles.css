@@ -90,3 +90,10 @@ input[type="textarea"] {
 p {
   margin: 0;
 }
+
+/* General */
+
+.crop-card.selected {
+  background-color: #1890ff;
+  color: #fff;
+}

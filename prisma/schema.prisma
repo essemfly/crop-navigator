@@ -26,6 +26,7 @@ model Crop {
   id                  Int      @unique @default(autoincrement())
   name                String
   nameEng             String
+  imageUrl            String
   cropType            CropType
   avgYearTemp         Float[]
   availGrowthTemp     Float[]
@@ -37,6 +38,7 @@ model Crop {
   growthEndMonth      Int?
   harvestMonth        Int?
   growthPeriodInMonth Int
+  registeredAt        DateTime @default(now())
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt
 }

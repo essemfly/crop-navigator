@@ -1,9 +1,5 @@
-import React, { useState, useEffect } from "react";
-import {
-  GoogleMap,
-  useJsApiLoader,
-  useLoadScript,
-} from "@react-google-maps/api";
+import { useState, useEffect } from "react";
+import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
 
 const containerStyle = {
   position: "relative",
@@ -21,6 +17,10 @@ const MapComponent = ({ center }) => {
     setMap(map);
   };
 
+  const onUnmount = () => {
+    setMap(null);
+  };
+
   useEffect(() => {
     if (map) {
       map.setCenter(center);
@@ -33,9 +33,10 @@ const MapComponent = ({ center }) => {
       center={center}
       zoom={13}
       onLoad={onMapLoad}
+      onUnmount={onUnmount}
       mapContainerStyle={containerStyle}
     >
-      {/* Your map markers, overlays, etc. */}
+      {map && <Marker position={center} map={map} />}
     </GoogleMap>
   ) : (
     <div>Loading...</div>

@@ -4,7 +4,7 @@ function MyHeader() {
   return (
     <Layout.Header className="Header">
       <div style={{ display: "flex", alignItems: "center" }}>
-        <h1 style={{ margin: 0, color: "white" }}>Rovers</h1>
+        <h1 style={{ margin: 0, color: "white" }}>Rovers: Crop Navigator</h1>
       </div>
     </Layout.Header>
   );

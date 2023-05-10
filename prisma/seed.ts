@@ -7,6 +7,7 @@ async function seed() {
     data: [
       {
         name: "Tomato",
+        imageUrl: "https://www.the",
         nameEng: "Tomdata",
         cropType: "VEGETABLE",
         avgYearTemp: [20.0, 30.0],
@@ -19,6 +20,7 @@ async function seed() {
         growthEndMonth: 10,
         harvestMonth: 10,
         growthPeriodInMonth: 12,
+        registeredAt: new Date(),
       },
     ],
   });
