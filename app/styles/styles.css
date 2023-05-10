@@ -1,0 +1,92 @@
+/* Custom Global Styles */
+
+/* TODO: Split these out into many files when CSS toolchain is in place */
+
+body {
+  background-color: #f5f5f5;
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, Segoe UI,
+    Helvetica Neue, Arial, Noto Sans, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", Segoe UI Symbol, "Noto Color Emoji" !important;
+}
+
+.Header {
+  background-color: #113216;
+  height: 63px;
+  line-height: 63px;
+  border-bottom: 1px solid #113216;
+  display: flex;
+  justify-content: space-between;
+  color: white;
+}
+
+.Header-logo {
+  background-image: url("/images/logo.svg");
+  width: 143px;
+  height: 62px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+}
+
+.Header-logoLink {
+  display: flex;
+}
+
+.ContentContainer {
+  box-sizing: border-box;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 2rem 0 2rem;
+  flex-shrink: 0;
+}
+
+@media (min-width: 375px) {
+  .ContentContainer {
+    padding: 2rem 1rem 0 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .ContentContainer {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .ContentContainer {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .ContentContainer {
+    width: 1170px;
+  }
+}
+
+/* User agent overrides */
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0 !important;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: #389e0d;
+}
+input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="textarea"] {
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+  height: 40px;
+  padding: 0 8px;
+}
+
+p {
+  margin: 0;
+}

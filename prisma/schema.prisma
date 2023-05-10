@@ -1,0 +1,42 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum CropType {
+  VEGETABLE
+  FRUIT
+  GRAIN
+  LEGUME
+  NUT
+  SPICE
+  FLOWER
+  HERB
+  FUNGUS
+  SEAWEED
+  ALGAE
+  OTHER
+}
+
+model Crop {
+  id                  Int      @unique @default(autoincrement())
+  name                String
+  nameEng             String
+  cropType            CropType
+  avgYearTemp         Float[]
+  availGrowthTemp     Float[]
+  lowestLiveTemp      Float
+  highestLiveTemp     Float
+  goodSunshine        Int
+  goodRainfall        Int
+  growhtStartMonth    Int?
+  growthEndMonth      Int?
+  harvestMonth        Int?
+  growthPeriodInMonth Int
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
