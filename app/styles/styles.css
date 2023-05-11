@@ -93,6 +93,11 @@ p {
 
 /* General */
 
+.crop-card.location-card {
+  background-color: #389e0d;
+  color: #fff;
+}
+
 .crop-card.selected {
   background-color: #1890ff;
   color: #fff;

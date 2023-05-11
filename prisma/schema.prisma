@@ -34,10 +34,11 @@ model Crop {
   highestLiveTemp     Float
   goodSunshine        Int
   goodRainfall        Int
-  growhtStartMonth    Int?
+  growthStartMonth    Int?
   growthEndMonth      Int?
   harvestMonth        Int?
   growthPeriodInMonth Int
+  cropApiCode         String
   registeredAt        DateTime @default(now())
   createdAt           DateTime @default(now())
   updatedAt           DateTime @updatedAt

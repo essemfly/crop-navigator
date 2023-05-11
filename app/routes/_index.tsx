@@ -3,10 +3,11 @@ import React, { useState, useEffect } from "react";
 import { Row, Col, Input, Button, Radio } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import MapComponent from "app/components/googleMap";
-import type { LatLng } from "~/models/location.server";
+import type { LatLng, Location } from "~/models/location.server";
 
 import type { SearchResult } from "app/components/searchResultCard";
 import SearchResultCard from "app/components/searchResultCard";
+import LocationInfoCard from "~/components/locationInfoCard";
 
 const HomeComponent: React.FC = () => {
   const [cropHouseType, setCropHouseType] = useState<string>("ground");
@@ -15,9 +16,14 @@ const HomeComponent: React.FC = () => {
   const [selectedResult, setSelectedResult] = useState<SearchResult | null>(
     null
   );
+  const [locationInfo, setLocationInfo] = useState<Location | null>(null);
   const [latLng, setLatLng] = useState<LatLng>({ lat: 37.5665, lng: 126.978 });
 
   useEffect(() => {
+    if (searchValue === "") {
+      return;
+    }
+
     const formData = new FormData();
     formData.append("lat", latLng.lat.toString());
     formData.append("lng", latLng.lng.toString());
@@ -47,9 +53,20 @@ const HomeComponent: React.FC = () => {
       .then((response) => response.json())
       .then((data) => {
         const firstResult = data.documents[0];
+        console.log("first result", firstResult);
         const latitude = +firstResult.y;
         const longitude = +firstResult.x;
         setLatLng({ lat: latitude, lng: longitude });
+        setLocationInfo({
+          name: firstResult.address_name,
+          avgYearHumitidy: 70,
+          avgYearRainfall: 1385,
+          avgYearTemp: 13.5,
+          highestTemp: 35,
+          lowestTemp: -10,
+          lat: latitude,
+          lng: longitude,
+        });
       })
       .catch((error) => console.error(error));
   };
@@ -81,6 +98,7 @@ const HomeComponent: React.FC = () => {
         />
       </Col>
       <Col xs={16} md={8}>
+        {locationInfo && <LocationInfoCard locationInfo={locationInfo} />}
         {searchResults.length > 0 && (
           <div>
             {searchResults.map((result, idx) => (
