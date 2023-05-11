@@ -8,6 +8,7 @@ import type { LatLng, Location } from "~/models/location.server";
 import type { SearchResult } from "app/components/searchResultCard";
 import SearchResultCard from "app/components/searchResultCard";
 import LocationInfoCard from "~/components/locationInfoCard";
+import CropInfo from "~/components/cropInfo";
 
 const HomeComponent: React.FC = () => {
   const [cropHouseType, setCropHouseType] = useState<string>("ground");
@@ -113,7 +114,8 @@ const HomeComponent: React.FC = () => {
         )}
       </Col>
       <Col xs={32} md={16}>
-        <MapComponent center={latLng} />
+        {!selectedResult && <MapComponent center={latLng} />}
+        {selectedResult && <CropInfo />}
       </Col>
     </Row>
   );

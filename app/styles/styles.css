@@ -102,3 +102,7 @@ p {
   background-color: #1890ff;
   color: #fff;
 }
+
+.info-card {
+  width: 100%;
+}
