@@ -106,3 +106,10 @@ p {
 .info-card {
   width: 100%;
 }
+
+/* Antd */
+.ant-menu.ant-menu-dark {
+  background-color: #113216;
+  font-weight: bold;
+  min-width: 400px;
+}

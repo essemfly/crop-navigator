@@ -1,4 +1,4 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
+import type { ActionArgs } from "@remix-run/node";
 import { getAvailableCrops } from "~/models/serachResults.server";
 import type { SearchResult } from "app/components/searchResultCard";
 
@@ -13,3 +13,9 @@ export async function action({ request, params }: ActionArgs) {
   );
   return suggestedCrops;
 }
+
+function CropPage() {
+  return <h2>Crops Page</h2>;
+}
+
+export default CropPage;
