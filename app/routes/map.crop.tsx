@@ -1,9 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 
-import { Row, Col, Button, Radio, Card } from "antd";
+import { Row, Col, Button, Radio, Card, List } from "antd";
 import MapComponent from "app/components/googleMapComponent";
 import type { Crop } from "@prisma/client";
-import type { LocationWithRecord } from "~/models/location.server";
+import type { LocationWithRecord, Location } from "~/models/location.server";
+import LocationScoreCard from "~/components/locationScoreCard";
+import type { Score } from "~/models/score.server";
 
 const containerStyle: React.CSSProperties = {
   width: "100%",
@@ -15,9 +17,131 @@ const cardStyle: React.CSSProperties = {
   top: "10px", // Adjust the distance from the bottom as needed
   right: "10px", // Adjust the distance from the right as needed
   width: "250px",
+  maxHeight: "55vh",
+  overflow: "scroll",
   position: "absolute",
   zIndex: 1,
 };
+
+const newMarkerData: MarkerData[] = [
+  {
+    position: { lat: 4.4697884, lng: 101.3879094 },
+    selected: false,
+    locationInfo: {
+      location: {
+        name: "Tanah Tinggi Cameron",
+        latLng: { lat: 4.4697884, lng: 101.3879094 },
+      },
+      soilRecords: [],
+      climateRecords: [],
+    },
+    score: {
+      crop: {
+        name: "Strawberry",
+      } as Crop,
+      location: {
+        name: "Tanah Tinggi Cameron",
+        latLng: { lat: 4.4697884, lng: 101.3879094 },
+      },
+      soilScore: {
+        grade: "B",
+        score: 0.83,
+        description:
+          "The soil has an acidic nature, requiring careful fertilizer management, and since the soil retains less moisture, it is important to water it frequently.",
+      },
+      climateScore: {
+        grade: "A",
+        score: 0.97,
+        description:
+          "From October onwards, the weather becomes cool, similar to the weather in Korea. However, it is important to monitor the sunlight intensity and duration. Additionally, for the ripening of strawberries, a slightly lower temperature is necessary, which may require refrigeration.",
+      },
+      totalScore: {
+        grade: "A",
+        score: 0.9,
+        description:
+          "It is evaluated as a suitable place where it is worth trying and plants can grow well.",
+      },
+    } as Score,
+  },
+  {
+    position: { lat: 4.2107164, lng: 101.1248754 },
+    selected: false,
+    locationInfo: {
+      location: {
+        name: "Tapah",
+        latLng: { lat: 4.2107164, lng: 101.1248754 },
+      },
+      soilRecords: [],
+      climateRecords: [],
+    },
+    score: {
+      crop: {
+        name: "Strawberry",
+      } as Crop,
+      location: {
+        name: "Tapah",
+        latLng: { lat: 4.2107164, lng: 101.1248754 },
+      },
+      soilScore: {
+        grade: "C",
+        score: 0.71,
+        description:
+          "The soil belongs to the fertile category. Proper fertilizer usage is important.",
+      },
+      climateScore: {
+        grade: "B",
+        score: 0.84,
+        description:
+          "Due to the fluctuating weather conditions and the presence of wet and dry seasons, greenhouse cultivation is necessary. Proper humidity control is crucial.",
+      },
+      totalScore: {
+        grade: "B",
+        score: 0.77,
+        description:
+          "The temperature is similar to that of Korea, and it doesn't drop below freezing during winter, making it more comfortable in terms of temperature suitability. However, being a mountainous region, factors such as oxygen saturation level can be important.",
+      },
+    } as Score,
+  },
+  {
+    position: { lat: 4.8606984, lng: 101.6050897 },
+    selected: false,
+    locationInfo: {
+      location: {
+        name: "Gua Musang",
+        latLng: { lat: 4.8606984, lng: 101.6050897 },
+      },
+      soilRecords: [],
+      climateRecords: [],
+    },
+    score: {
+      crop: {
+        name: "Strawberry",
+      } as Crop,
+      location: {
+        name: "Gua Musang",
+        latLng: { lat: 4.8606984, lng: 101.6050897 },
+      },
+      soilScore: {
+        grade: "C",
+        score: 0.71,
+        description:
+          "While the soil is fertile, it is regrettable that it is not suitable for growing strawberries in terms of soil quality.",
+      },
+      climateScore: {
+        grade: "C",
+        score: 0.74,
+        description:
+          "While it seems possible to control the weather conditions to some extent, there are concerns about higher electricity costs and whether the harvest yield will be satisfactory",
+      },
+      totalScore: {
+        grade: "C",
+        score: 0.73,
+        description:
+          "Overall, it may be possible to conduct experimental cultivation, but it remains uncertain whether a satisfactory harvest yield can be achieved. However, the proximity of the location could lead to reduced costs.",
+      },
+    } as Score,
+  },
+];
 
 interface MapData {
   center: google.maps.LatLngLiteral;
@@ -28,15 +152,15 @@ interface MapData {
 interface MarkerData {
   position: google.maps.LatLngLiteral;
   selected: boolean;
-  locationInfo: LocationWithRecord;
+  locationInfo?: LocationWithRecord;
+  score?: Score;
 }
 
 const MapLocationComponent: React.FC = () => {
   const [cropHouseType, setCropHouseType] = useState<string>("ground");
-  const [crops, setCrops] = useState<Crop[]>([]);
   const [selectedCrop, setSelectedCrop] = useState<Crop>();
   // const [markers, setMarkers] = useState<LatLng[]>([]);
-  const [selectedMarker, setSelectedMarker] = useState();
+  const [selectedMarker, setSelectedMarker] = useState<Score>();
   // const [center, setCenter] = useState<LatLng>({ lat: 37.5665, lng: 126.978 });
 
   const [mapData, setMapData] = useState<MapData>({
@@ -59,51 +183,12 @@ const MapLocationComponent: React.FC = () => {
       }
     });
     mapData.center = mapData.markers[idx].position;
-    mapData.zoom = 14;
+    mapData.zoom = 12;
     setMapData({ ...mapData });
+    setSelectedMarker(mapData.markers[idx].score!);
   };
 
   const handleSearch = () => {
-    const newMarkerData: MarkerData[] = [
-      {
-        position: { lat: 4.4697884, lng: 101.3879094 },
-        selected: false,
-        locationInfo: {
-          location: {
-            name: "Tanah Tinggi Cameron",
-            latLng: { lat: 4.4697884, lng: 101.3879094 },
-          },
-          soilRecords: [],
-          climateRecords: [],
-        },
-      },
-      {
-        position: { lat: 4.2107164, lng: 101.1248754 },
-        selected: false,
-        locationInfo: {
-          location: {
-            name: "Tapah",
-            latLng: { lat: 4.2107164, lng: 101.1248754 },
-          },
-          soilRecords: [],
-          climateRecords: [],
-        },
-      },
-      {
-        position: { lat: 4.8606984, lng: 101.6050897 },
-        selected: false,
-        locationInfo: {
-          location: {
-            name: "Gua Musang",
-            latLng: { lat: 4.8606984, lng: 101.6050897 },
-          },
-          soilRecords: [],
-          climateRecords: [],
-        },
-      },
-    ];
-
-    console.log("map data", mapData);
     setMapData((prevData) => ({
       ...prevData,
       markers: newMarkerData,
@@ -168,7 +253,15 @@ const MapLocationComponent: React.FC = () => {
           {markers.length > 0 && (
             <div style={cardStyle}>
               <Card title="Candidates">
-                <p>Card content goes here</p>
+                <List>
+                  {markers.map((marker, idx) => (
+                    <LocationScoreCard
+                      key={idx}
+                      score={marker.score!}
+                      onClick={() => handleMarkerClicked(idx)}
+                    />
+                  ))}
+                </List>
               </Card>
             </div>
           )}

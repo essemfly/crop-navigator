@@ -9,7 +9,6 @@ export interface WaterRequired {
 export interface SoilRequired {
   ph: number;
   electricalConductivity: number;
-
   nightTemp: number;
   dayTemp: number;
   sunHours: number;
@@ -33,6 +32,13 @@ export interface GrowthStage {
   climate: ClimateRequired;
   crop: Crop;
   order: number;
+}
+
+export async function getStrawberry(): Promise<Crop> {
+  const strawberry = await prisma.crop.findUnique({
+    where: { id: 16 },
+  });
+  return strawberry!;
 }
 
 export async function getRandomCrops(numCrops: number): Promise<Crop[]> {

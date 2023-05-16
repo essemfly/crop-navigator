@@ -83,7 +83,7 @@ const MapComponent = ({
         <Circle
           key={`circle-${index}`}
           center={marker.position}
-          radius={1000} // 1km radius in meters
+          radius={10000} // 5km radius in meters
           options={{
             strokeColor: "#00FF00", // Green stroke color
             strokeOpacity: 0.8,

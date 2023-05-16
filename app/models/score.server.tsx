@@ -1,5 +1,6 @@
 import { getRandomCrops } from "./crop.server";
 import type { Crop } from "@prisma/client";
+import type { Location } from "./location.server";
 
 export interface ScoreForm {
   grade: string;
