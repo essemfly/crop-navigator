@@ -1,6 +1,8 @@
 import { Card } from "antd";
 import type { Crop } from "@prisma/client";
 import type { LocationWithRecord } from "~/models/location.server";
+import SoilInformation from "./soilInfo";
+import type { Soil } from "~/models/nature.server";
 
 export interface SearchResult {
   id: number;
@@ -14,19 +16,27 @@ interface LocationProps {
 }
 
 const LocationInfoCard: React.FC<LocationProps> = ({ locationInfo }) => {
+  const soilInfo: Soil = {
+    magnesium: 10,
+    potassium: 20,
+    calcium: 15,
+    silicon: 8,
+    phosphorus: 12,
+    electricalConductivity: 5,
+    organicMatter: 3,
+    pH: 6.5,
+    soilType: "Loam",
+    gravel: 2,
+    drainage: 4,
+    soilHumidity10cm: 30,
+    soilHumidity30cm: 40,
+  };
+
+  console.log("locationInfo", locationInfo.location.name);
   return (
-    <Card className={`crop-card location-card`} style={{ marginBottom: 10 }}>
-      <div style={{ display: "flex" }}>
-        <div style={{ marginLeft: 16 }}>
-          <h2 style={{ marginBottom: 5 }}>{locationInfo.location.name}</h2>
-          <p>평균습도: info fix required</p>
-          <p>평균강수량: info fix required</p>
-          <p>평균온도: info fix required</p>
-          <p>연평균최소기온: info fix required</p>
-          <p>연평균최고기온: info fix required</p>
-        </div>
-      </div>
-    </Card>
+    <div style={{ display: "block" }}>
+      <SoilInformation soil={soilInfo} address={locationInfo.location.name} />
+    </div>
   );
 };
 

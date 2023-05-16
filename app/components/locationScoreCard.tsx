@@ -28,7 +28,12 @@ const LocationScoreCard: React.FC<LocationScoreProps> = ({
       onClick={onClick}
     >
       <List.Item.Meta
-        avatar={myGrade}
+        avatar={
+          <div>
+            {myGrade}
+            <span>{score.totalScore.score}</span>
+          </div>
+        }
         title={score.location.name}
         description={score.totalScore.description}
       />

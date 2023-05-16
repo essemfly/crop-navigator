@@ -10,13 +10,13 @@ function MyHeader() {
         </Link>
       </div>
       <Menu theme="dark" mode="horizontal" defaultSelectedKeys={[""]}>
-        <Menu.Item key="location">
-          {/* By location 탭의 내용 */}
-          <Link to="/map/location">by Location</Link>
-        </Menu.Item>
         <Menu.Item key="crop">
           {/* By crop 탭의 내용 */}
           <Link to="/map/crop">by Crop</Link>
+        </Menu.Item>
+        <Menu.Item key="location">
+          {/* By location 탭의 내용 */}
+          <Link to="/map/location">by Location</Link>
         </Menu.Item>
       </Menu>
     </Layout.Header>

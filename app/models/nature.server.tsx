@@ -1,5 +1,5 @@
 export interface Soil {
-  magnesuim: number; //마그네슘
+  magnesium: number; //마그네슘
   potassium: number; //칼륨
   calcium: number; // 칼슘
   silicon: number; // 규소

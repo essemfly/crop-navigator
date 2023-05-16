@@ -1,14 +1,43 @@
 import React, { useState, useEffect } from "react";
 
-import { Row, Col, Input, Button, Radio } from "antd";
+import { Row, Col, Input, Button } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { LatLng, LocationWithRecord } from "~/models/location.server";
-import type { SearchResult } from "~/models/score.server";
+import type { SearchResult, Score } from "~/models/score.server";
 
 import MapComponent from "app/components/googleMapComponent";
 import SearchResultCard from "app/components/searchResultCard";
 import LocationInfoCard from "~/components/locationInfoCard";
-import CropInfo from "~/components/cropInfo";
+
+const containerStyle: React.CSSProperties = {
+  width: "100%",
+  height: "75vh",
+  position: "relative",
+};
+
+const locationStyle: React.CSSProperties = {
+  top: "10px", // Adjust the distance from the bottom as needed
+  maxHeight: "55vh",
+  position: "absolute",
+  zIndex: 1,
+};
+
+const cardStyle: React.CSSProperties = {
+  top: "10px", // Adjust the distance from the bottom as needed
+  right: "10px", // Adjust the distance from the right as needed
+  maxWidth: "400px",
+  maxHeight: "75vh",
+  overflow: "scroll",
+  position: "absolute",
+  zIndex: 1,
+};
+
+interface MarkerData {
+  position: google.maps.LatLngLiteral;
+  selected: boolean;
+  locationInfo?: LocationWithRecord;
+  score?: Score;
+}
 
 const MapCropComponent: React.FC = () => {
   const [searchValue, setSearchValue] = useState<string>("");
@@ -20,6 +49,7 @@ const MapCropComponent: React.FC = () => {
     null
   );
   const [latLng, setLatLng] = useState<LatLng>({ lat: 37.5665, lng: 126.978 });
+  const [marker, setMarker] = useState<MarkerData[]>([]);
 
   const zoomLevel = 12;
 
@@ -57,7 +87,6 @@ const MapCropComponent: React.FC = () => {
       .then((response) => response.json())
       .then((data) => {
         const firstResult = data.documents[0];
-        console.log("first result", firstResult);
         const latitude = +firstResult.y;
         const longitude = +firstResult.x;
         setLatLng({ lat: latitude, lng: longitude });
@@ -69,6 +98,12 @@ const MapCropComponent: React.FC = () => {
           soilRecords: [],
           climateRecords: [],
         });
+        setMarker([
+          {
+            position: { lat: latitude, lng: longitude },
+            selected: true,
+          },
+        ]);
       })
       .catch((error) => console.error(error));
   };
@@ -79,11 +114,7 @@ const MapCropComponent: React.FC = () => {
     }
   };
 
-  let tempCenter: LatLng = { lat: 37.5665, lng: 126.978 };
-
-  const handleCenterChanged = (evt: any) => {
-    tempCenter = { lat: evt.lat(), lng: evt.lng() };
-  };
+  const handleCenterChanged = (evt: any) => {};
 
   return (
     <Row gutter={[16, 16]}>
@@ -97,33 +128,35 @@ const MapCropComponent: React.FC = () => {
           onChange={(e) => setSearchValue(e.target.value)}
         />
       </Col>
-      <Col xs={16} md={8}>
-        {locationInfo && <LocationInfoCard locationInfo={locationInfo} />}
-        {searchResults.length > 0 && (
-          <div>
-            {searchResults.map((result, idx) => (
-              <SearchResultCard
-                key={idx}
-                onClick={() => setSelectedResult(result)}
-                result={result}
-                isSelected={selectedResult?.id === result.id}
-              />
-            ))}
-          </div>
-        )}
-      </Col>
-      <Col xs={32} md={16}>
-        {!selectedResult && (
+      <Col xs={48} md={24}>
+        <div style={containerStyle}>
+          {locationInfo && (
+            <div>
+              <div style={locationStyle}>
+                <LocationInfoCard locationInfo={locationInfo} />
+              </div>
+              <div style={cardStyle}>
+                {searchResults.length > 0 &&
+                  searchResults.map((result, idx) => (
+                    <SearchResultCard
+                      key={idx}
+                      onClick={() => setSelectedResult(result)}
+                      result={result}
+                      isSelected={selectedResult?.id === result.id}
+                    />
+                  ))}
+              </div>
+            </div>
+          )}
           <MapComponent
             zoom={zoomLevel}
             center={latLng}
-            markerData={[]}
+            markerData={marker}
             onCenterChanged={handleCenterChanged}
             onMarkerClick={null}
             onClick={null}
           />
-        )}
-        {selectedResult && <CropInfo />}
+        </div>
       </Col>
     </Row>
   );

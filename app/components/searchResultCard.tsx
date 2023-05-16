@@ -15,18 +15,18 @@ const SearchResultCard: React.FC<ResultProps> = ({
 }) => {
   return (
     <Card
-      className={`crop-card ${isSelected ? "selected" : ""}`}
+      className={`crop-card search-result-card ${isSelected ? "selected" : ""}`}
       onClick={onClick}
-      style={{ marginBottom: 10 }}
+      style={{ marginBottom: 5, backgroundColor: "rgba(255, 255, 255, 0.75);" }}
     >
       <div style={{ display: "flex" }}>
         <img
           src={result.crop.imageUrl}
           alt={result.crop.name}
-          style={{ width: 100, height: 100 }}
+          style={{ width: 50, height: 50 }}
         />
-        <div style={{ marginLeft: 16 }}>
-          <h2 style={{ marginBottom: 5 }}>{result.crop.name}</h2>
+        <div style={{ marginLeft: 8 }}>
+          <h4 style={{ marginBottom: 2 }}>{result.crop.name}</h4>
           <p>품종: {result.crop.nameEng}</p>
           <p>지역 적합도: {result.fitness * 100}</p>
           <p>기대 수익: {result.expectedProfit}원/평</p>

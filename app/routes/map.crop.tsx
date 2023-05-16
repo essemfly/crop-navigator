@@ -280,21 +280,36 @@ const MapLocationComponent: React.FC = () => {
                 <List>
                   <List.Item>
                     <List.Item.Meta
-                      avatar={makeGradeIcon(selectedMarker.climateScore.grade)}
+                      avatar={
+                        <div>
+                          {makeGradeIcon(selectedMarker.climateScore.grade)}
+                          <span>{selectedMarker.climateScore.score}</span>
+                        </div>
+                      }
                       title="Climate Score"
                       description={selectedMarker.climateScore.description}
                     />
                   </List.Item>
                   <List.Item>
                     <List.Item.Meta
-                      avatar={makeGradeIcon(selectedMarker.soilScore.grade)}
+                      avatar={
+                        <div>
+                          {makeGradeIcon(selectedMarker.soilScore.grade)}
+                          <span>{selectedMarker.soilScore.score}</span>
+                        </div>
+                      }
                       title="Soil Score"
                       description={selectedMarker.soilScore.description}
                     />
                   </List.Item>
                   <List.Item>
                     <List.Item.Meta
-                      avatar={makeGradeIcon(selectedMarker.totalScore.grade)}
+                      avatar={
+                        <div>
+                          {makeGradeIcon(selectedMarker.totalScore.grade)}
+                          <span>{selectedMarker.totalScore.score}</span>
+                        </div>
+                      }
                       title="Total Score"
                       description={selectedMarker.totalScore.description}
                     />
