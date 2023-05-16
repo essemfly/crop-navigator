@@ -1,124 +1,106 @@
 import React, { useState, useEffect } from "react";
 
-import { Row, Col, Input, Button, Radio } from "antd";
-import { SearchOutlined } from "@ant-design/icons";
-import MapComponent from "app/components/googleMap";
-import type { LatLng, Location } from "~/models/location.server";
+import { Row, Col, Button, Radio, Card } from "antd";
+import MapComponent from "app/components/googleMapComponent";
+import type { Crop } from "@prisma/client";
+import type { LatLng } from "~/models/location.server";
 
-import type { SearchResult } from "app/components/searchResultCard";
-import SearchResultCard from "app/components/searchResultCard";
-import LocationInfoCard from "~/components/locationInfoCard";
-import CropInfo from "~/components/cropInfo";
+const containerStyle: React.CSSProperties = {
+  width: "100%",
+  height: "400px",
+  position: "relative",
+};
 
-const HomeComponent: React.FC = () => {
+const cardStyle: React.CSSProperties = {
+  top: "10px", // Adjust the distance from the bottom as needed
+  right: "10px", // Adjust the distance from the right as needed
+  width: "250px",
+  position: "absolute",
+  zIndex: 1,
+};
+
+const MapLocationComponent: React.FC = () => {
   const [cropHouseType, setCropHouseType] = useState<string>("ground");
-  const [searchValue, setSearchValue] = useState<string>("");
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const [selectedResult, setSelectedResult] = useState<SearchResult | null>(
-    null
-  );
-  const [locationInfo, setLocationInfo] = useState<Location | null>(null);
-  const [latLng, setLatLng] = useState<LatLng>({ lat: 37.5665, lng: 126.978 });
-
-  useEffect(() => {
-    if (searchValue === "") {
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("lat", latLng.lat.toString());
-    formData.append("lng", latLng.lng.toString());
-
-    const requestOptions: RequestInit = {
-      method: "POST",
-      body: formData,
-    };
-
-    fetch("/crops", requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("new results", data);
-        setSearchResults(data);
-      })
-      .catch((error) => {
-        console.log("err", error);
-      });
-  }, [latLng]);
+  const [crops, setCrops] = useState<Crop[]>([]);
+  const [selectedCrop, setSelectedCrop] = useState<Crop>();
+  const [markers, setMarkers] = useState<LatLng[]>([]);
+  const [selectedMarker, setSelectedMarker] = useState();
 
   const handleSearch = () => {
-    const headers = {
-      Authorization: `KakaoAK d739e6be1eae6ec1b48f57071b5582d1`,
-    };
-    const url = `https://dapi.kakao.com/v2/local/search/address.json?query=${searchValue}`;
-    fetch(url, { headers })
-      .then((response) => response.json())
-      .then((data) => {
-        const firstResult = data.documents[0];
-        console.log("first result", firstResult);
-        const latitude = +firstResult.y;
-        const longitude = +firstResult.x;
-        setLatLng({ lat: latitude, lng: longitude });
-        setLocationInfo({
-          name: firstResult.address_name,
-          avgYearHumitidy: 70,
-          avgYearRainfall: 1385,
-          avgYearTemp: 13.5,
-          highestTemp: 35,
-          lowestTemp: -10,
-          lat: latitude,
-          lng: longitude,
-        });
-      })
-      .catch((error) => console.error(error));
+    setMarkers([
+      { lat: 37.5665, lng: 126.978 },
+      { lat: 37.5665, lng: 126.979 },
+      { lat: 37.5665, lng: 126.98 },
+    ]);
   };
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      handleSearch();
-    }
-  };
+  const defaultLatLng = { lat: 37.5665, lng: 126.978 };
 
   return (
     <Row gutter={[16, 16]}>
       <Col xs={48} md={24}>
-        <Radio.Group
-          onChange={(e) => setCropHouseType(e.target.value)}
-          defaultValue="ground"
-          value={cropHouseType}
+        <div>
+          <Radio.Group
+            onChange={(e) => setCropHouseType(e.target.value)}
+            defaultValue="ground"
+            value={cropHouseType}
+          >
+            <Radio.Button value="ground">노지재배</Radio.Button>
+            <Radio.Button value="facility">시설재배</Radio.Button>
+          </Radio.Group>
+        </div>
+        <div
+          style={{
+            marginTop: "10px",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
         >
-          <Radio.Button value="ground">노지재배</Radio.Button>
-          <Radio.Button value="facility">시설재배</Radio.Button>
-        </Radio.Group>
-        <Input
-          placeholder="Search"
-          value={searchValue}
-          allowClear
-          suffix={<Button icon={<SearchOutlined />} onClick={handleSearch} />}
-          onKeyPress={handleKeyPress}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
-      </Col>
-      <Col xs={16} md={8}>
-        {locationInfo && <LocationInfoCard locationInfo={locationInfo} />}
-        {searchResults.length > 0 && (
-          <div>
-            {searchResults.map((result, idx) => (
-              <SearchResultCard
-                key={idx}
-                onClick={() => setSelectedResult(result)}
-                result={result}
-                isSelected={selectedResult?.id === result.id}
+          <Radio.Group
+            size="large"
+            onChange={(e) => setSelectedCrop(e.target.value)}
+            defaultValue="strawberry"
+            value={selectedCrop}
+          >
+            <Radio.Button value="strawberry">
+              <img
+                src="https://modo-phinf.pstatic.net/20180104_55/1515058237254fV4ed_JPEG/mosaljL6dZ.jpeg?type=round256_256"
+                alt="딸기"
+                style={{ marginRight: "8px", height: "20px" }}
               />
-            ))}
-          </div>
-        )}
+              딸기
+            </Radio.Button>
+            <Radio.Button value="facility">
+              <img
+                src="https://modo-phinf.pstatic.net/20181211_210/1544525804735qyiom_JPEG/mosaluSftX.jpeg?type=round256_256"
+                alt="복숭아"
+                style={{ marginRight: "8px", height: "20px" }}
+              />
+              복숭아
+            </Radio.Button>
+          </Radio.Group>
+          <Button type="primary" size="large" onClick={handleSearch}>
+            현 지도에서 검색
+          </Button>
+        </div>
       </Col>
-      <Col xs={32} md={16}>
-        {!selectedResult && <MapComponent center={latLng} />}
-        {selectedResult && <CropInfo />}
+      {/* <Col xs={16} md={8}>
+        {markers.length > 0 && <div></div>}
+      </Col> */}
+      <Col xs={48} md={24}>
+        <div style={containerStyle}>
+          {markers.length > 0 && (
+            <div style={cardStyle}>
+              <Card title="Candidates">
+                <p>Card content goes here</p>
+              </Card>
+            </div>
+          )}
+          <MapComponent center={defaultLatLng} markers={markers} />
+        </div>
       </Col>
     </Row>
   );
 };
 
-export default HomeComponent;
+export default MapLocationComponent;

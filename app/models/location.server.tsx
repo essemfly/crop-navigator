@@ -1,3 +1,5 @@
+import type { SoilRecord, ClimateRecord } from "./nature.server";
+
 export interface LatLng {
   lat: number;
   lng: number;
@@ -5,11 +7,14 @@ export interface LatLng {
 
 export interface Location {
   name: string;
-  lat: number;
-  lng: number;
-  avgYearHumitidy: number;
-  avgYearRainfall: number;
-  avgYearTemp: number;
-  lowestTemp: number;
-  highestTemp: number;
+  latLng: LatLng;
+  soilRecords: SoilRecord[];
+  climateRecords: ClimateRecord[];
+}
+
+export interface Score {}
+
+export interface LocationScore {
+  location: Location;
+  soilScore: Score;
 }

@@ -1,6 +1,6 @@
 import type { ActionArgs } from "@remix-run/node";
-import { getAvailableCrops } from "~/models/serachResults.server";
-import type { SearchResult } from "app/components/searchResultCard";
+import { getAvailableCrops } from "~/models/score.server";
+import type { SearchResult } from "~/models/score.server";
 
 export async function action({ request, params }: ActionArgs) {
   const formData = await request.formData();
@@ -13,9 +13,3 @@ export async function action({ request, params }: ActionArgs) {
   );
   return suggestedCrops;
 }
-
-function CropPage() {
-  return <h2>Crops Page</h2>;
-}
-
-export default CropPage;

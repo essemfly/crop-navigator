@@ -1,12 +1,5 @@
 import { Card } from "antd";
-import type { Crop } from "@prisma/client";
-
-export interface SearchResult {
-  id: number;
-  crop: Crop;
-  expectedProfit: number;
-  fitness: number;
-}
+import type { SearchResult } from "~/models/score.server";
 
 interface ResultProps {
   key: number;

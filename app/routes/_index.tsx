@@ -1,21 +1,11 @@
-import type { ActionArgs, LoaderArgs } from "@remix-run/node";
-import { getAvailableCrops } from "~/models/serachResults.server";
-import type { SearchResult } from "app/components/searchResultCard";
+import React, { useState } from "react";
+import { Card, Row, Col } from "antd";
+import MapComponent from "app/components/googleMapComponent";
+import { Marker } from "@react-google-maps/api";
 
-export async function action({ request, params }: ActionArgs) {
-  const formData = await request.formData();
-  const lat = formData.get("lat");
-  const lng = formData.get("lng");
+// Define your component
+const HomePage: React.FC = () => {
+  return <div>Hello World</div>;
+};
 
-  const suggestedCrops: SearchResult[] = await getAvailableCrops(
-    parseFloat(lat!.toString()),
-    parseFloat(lng!.toString())
-  );
-  return suggestedCrops;
-}
-
-function CropsPage() {
-  return <h2>Rovers Crop Navigator</h2>;
-}
-
-export default CropsPage;
+export default HomePage;

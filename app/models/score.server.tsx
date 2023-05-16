@@ -1,5 +1,23 @@
-import type { SearchResult } from "~/components/searchResultCard";
 import { getRandomCrops } from "./crop.server";
+import type { Crop } from "@prisma/client";
+import type { Location } from "~/models/location.server";
+import type { SoilRecord, ClimateRecord } from "~/models/nature.server";
+
+export interface Score {
+  grade: string;
+  score: number;
+  crop: Crop;
+  location: Location;
+  SoilRecords: SoilRecord[];
+  ClimateRecords: ClimateRecord[];
+}
+
+export interface SearchResult {
+  id: number;
+  crop: Crop;
+  expectedProfit: number;
+  fitness: number;
+}
 
 export async function getAvailableCrops(lat: number, lng: number) {
   const crops = await getRandomCrops(6);

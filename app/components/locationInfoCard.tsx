@@ -19,11 +19,11 @@ const LocationInfoCard: React.FC<LocationProps> = ({ locationInfo }) => {
       <div style={{ display: "flex" }}>
         <div style={{ marginLeft: 16 }}>
           <h2 style={{ marginBottom: 5 }}>{locationInfo.name}</h2>
-          <p>평균습도: {locationInfo.avgYearHumitidy}</p>
-          <p>평균강수량: {locationInfo.avgYearRainfall}</p>
-          <p>평균온도: {locationInfo.avgYearTemp}</p>
-          <p>연평균최소기온: {locationInfo.lowestTemp}</p>
-          <p>연평균최고기온: {locationInfo.highestTemp}</p>
+          <p>평균습도: info fix required</p>
+          <p>평균강수량: info fix required</p>
+          <p>평균온도: info fix required</p>
+          <p>연평균최소기온: info fix required</p>
+          <p>연평균최고기온: info fix required</p>
         </div>
       </div>
     </Card>

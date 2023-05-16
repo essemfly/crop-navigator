@@ -107,6 +107,17 @@ p {
   width: 100%;
 }
 
+.grade-column {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grade {
+  font-size: 24px;
+  font-weight: bold;
+}
+
 /* Antd */
 .ant-menu.ant-menu-dark {
   background-color: #113216;

@@ -2,16 +2,15 @@ import React, { useState, useEffect } from "react";
 
 import { Row, Col, Input, Button, Radio } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import MapComponent from "app/components/googleMap";
 import type { LatLng, Location } from "~/models/location.server";
+import type { SearchResult } from "~/models/score.server";
 
-import type { SearchResult } from "app/components/searchResultCard";
+import MapComponent from "app/components/googleMapComponent";
 import SearchResultCard from "app/components/searchResultCard";
 import LocationInfoCard from "~/components/locationInfoCard";
 import CropInfo from "~/components/cropInfo";
 
-const HomeComponent: React.FC = () => {
-  const [cropHouseType, setCropHouseType] = useState<string>("ground");
+const MapCropComponent: React.FC = () => {
   const [searchValue, setSearchValue] = useState<string>("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [selectedResult, setSelectedResult] = useState<SearchResult | null>(
@@ -60,13 +59,9 @@ const HomeComponent: React.FC = () => {
         setLatLng({ lat: latitude, lng: longitude });
         setLocationInfo({
           name: firstResult.address_name,
-          avgYearHumitidy: 70,
-          avgYearRainfall: 1385,
-          avgYearTemp: 13.5,
-          highestTemp: 35,
-          lowestTemp: -10,
-          lat: latitude,
-          lng: longitude,
+          latLng: { lat: latitude, lng: longitude },
+          soilRecords: [],
+          climateRecords: [],
         });
       })
       .catch((error) => console.error(error));
@@ -81,14 +76,6 @@ const HomeComponent: React.FC = () => {
   return (
     <Row gutter={[16, 16]}>
       <Col xs={48} md={24}>
-        <Radio.Group
-          onChange={(e) => setCropHouseType(e.target.value)}
-          defaultValue="ground"
-          value={cropHouseType}
-        >
-          <Radio.Button value="ground">노지재배</Radio.Button>
-          <Radio.Button value="facility">시설재배</Radio.Button>
-        </Radio.Group>
         <Input
           placeholder="Search"
           value={searchValue}
@@ -114,11 +101,11 @@ const HomeComponent: React.FC = () => {
         )}
       </Col>
       <Col xs={32} md={16}>
-        {!selectedResult && <MapComponent center={latLng} />}
+        {!selectedResult && <MapComponent center={latLng} markers={[null]} />}
         {selectedResult && <CropInfo />}
       </Col>
     </Row>
   );
 };
 
-export default HomeComponent;
+export default MapCropComponent;
