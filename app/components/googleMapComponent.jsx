@@ -24,6 +24,7 @@ const MapComponent = ({
   markerData,
   onCenterChanged,
   onMarkerClick,
+  onClick,
 }) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "AIzaSyBIAVCWoBcNFcjxklrWfD3dSGHTajsJ0KQ",
@@ -53,6 +54,7 @@ const MapComponent = ({
   // }, [center, map]);
 
   useEffect(() => {
+    console.log("marker changed");
     setLoadedMarkers(markerData);
   }, [markerData]);
 
@@ -63,6 +65,7 @@ const MapComponent = ({
       zoom={zoom}
       onLoad={onMapLoad}
       onUnmount={onUnmount}
+      onClick={onClick}
       onCenterChanged={handleCenterChanged}
       mapContainerStyle={containerStyle}
       options={{ styles: mapStyles }}
@@ -79,20 +82,24 @@ const MapComponent = ({
           }
         />
       ))}
-      {loadedMarkers.map((marker, index) => (
-        <Circle
-          key={`circle-${index}`}
-          center={marker.position}
-          radius={10000} // 5km radius in meters
-          options={{
-            strokeColor: "#00FF00", // Green stroke color
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: "#00FF00", // Light green fill color
-            fillOpacity: 0.4,
-          }}
-        />
-      ))}
+      {loadedMarkers.length > 0 &&
+        loadedMarkers.map(
+          (marker, index) =>
+            marker && (
+              <Circle
+                key={`circle-${index}`}
+                center={marker.position}
+                radius={10000} // 5km radius in meters
+                options={{
+                  strokeColor: "#00FF00", // Green stroke color
+                  strokeOpacity: 0.8,
+                  strokeWeight: 2,
+                  fillColor: "#00FF00", // Light green fill color
+                  fillOpacity: 0.4,
+                }}
+              />
+            )
+        )}
     </GoogleMap>
   ) : (
     <div>Loading...</div>

@@ -1,6 +1,6 @@
 import { List } from "antd";
 import React from "react";
-import { GradeA, GradeB, GradeC, GradeD } from "./grade";
+import { makeGradeIcon } from "./grade";
 import type { Score } from "~/models/score.server";
 
 interface LocationScoreProps {
@@ -12,16 +12,7 @@ const LocationScoreCard: React.FC<LocationScoreProps> = ({
   score,
   onClick,
 }) => {
-  let myGrade =
-    score.totalScore.grade === "A" ? (
-      <GradeA />
-    ) : score.totalScore.grade === "B" ? (
-      <GradeB />
-    ) : score.totalScore.grade === "C" ? (
-      <GradeC />
-    ) : (
-      <GradeD />
-    );
+  let myGrade = makeGradeIcon(score.totalScore.grade);
 
   return (
     <List.Item
@@ -38,7 +29,7 @@ const LocationScoreCard: React.FC<LocationScoreProps> = ({
     >
       <List.Item.Meta
         avatar={myGrade}
-        title={<h3>{score.location.name}</h3>}
+        title={score.location.name}
         description={score.totalScore.description}
       />
     </List.Item>

@@ -35,4 +35,16 @@ const GradeD: React.FC = () => {
   );
 };
 
-export { GradeA, GradeB, GradeC, GradeD };
+const makeGradeIcon = (grade: string) => {
+  if (grade === "A") {
+    return <GradeA />;
+  } else if (grade === "B") {
+    return <GradeB />;
+  } else if (grade === "C") {
+    return <GradeC />;
+  } else {
+    return <GradeD />;
+  }
+};
+
+export { makeGradeIcon };

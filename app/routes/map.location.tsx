@@ -120,6 +120,7 @@ const MapCropComponent: React.FC = () => {
             markerData={[]}
             onCenterChanged={handleCenterChanged}
             onMarkerClick={null}
+            onClick={null}
           />
         )}
         {selectedResult && <CropInfo />}

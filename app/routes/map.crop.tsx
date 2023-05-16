@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import { Row, Col, Button, Radio, Card, List } from "antd";
 import MapComponent from "app/components/googleMapComponent";
 import type { Crop } from "@prisma/client";
-import type { LocationWithRecord, Location } from "~/models/location.server";
+import type { LocationWithRecord } from "~/models/location.server";
 import LocationScoreCard from "~/components/locationScoreCard";
 import type { Score } from "~/models/score.server";
+import { makeGradeIcon } from "~/components/grade";
 
 const containerStyle: React.CSSProperties = {
   width: "100%",
@@ -16,8 +17,17 @@ const containerStyle: React.CSSProperties = {
 const cardStyle: React.CSSProperties = {
   top: "10px", // Adjust the distance from the bottom as needed
   right: "10px", // Adjust the distance from the right as needed
-  width: "250px",
+  width: "300px",
   maxHeight: "55vh",
+  overflow: "scroll",
+  position: "absolute",
+  zIndex: 1,
+};
+
+const bottomCardStyle: React.CSSProperties = {
+  bottom: "10px", // Adjust the distance from the bottom as needed
+  width: "60vh",
+  maxHeight: "10vh",
   overflow: "scroll",
   position: "absolute",
   zIndex: 1,
@@ -159,9 +169,7 @@ interface MarkerData {
 const MapLocationComponent: React.FC = () => {
   const [cropHouseType, setCropHouseType] = useState<string>("ground");
   const [selectedCrop, setSelectedCrop] = useState<Crop>();
-  // const [markers, setMarkers] = useState<LatLng[]>([]);
-  const [selectedMarker, setSelectedMarker] = useState<Score>();
-  // const [center, setCenter] = useState<LatLng>({ lat: 37.5665, lng: 126.978 });
+  const [selectedMarker, setSelectedMarker] = useState<Score | null>(null);
 
   const [mapData, setMapData] = useState<MapData>({
     center: { lat: 1.392854, lng: 103.781753 },
@@ -186,6 +194,10 @@ const MapLocationComponent: React.FC = () => {
     mapData.zoom = 12;
     setMapData({ ...mapData });
     setSelectedMarker(mapData.markers[idx].score!);
+  };
+
+  const handleEmptyClicked = () => {
+    setSelectedMarker(null);
   };
 
   const handleSearch = () => {
@@ -245,12 +257,9 @@ const MapLocationComponent: React.FC = () => {
           </Button>
         </div>
       </Col>
-      {/* <Col xs={16} md={8}>
-        {markers.length > 0 && <div></div>}
-      </Col> */}
       <Col xs={48} md={24}>
         <div style={containerStyle}>
-          {markers.length > 0 && (
+          {markers.length > 0 && selectedMarker === null && (
             <div style={cardStyle}>
               <Card title="Candidates">
                 <List>
@@ -265,12 +274,42 @@ const MapLocationComponent: React.FC = () => {
               </Card>
             </div>
           )}
+          {selectedMarker !== null && (
+            <div style={cardStyle}>
+              <Card title={selectedMarker.location.name}>
+                <List>
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={makeGradeIcon(selectedMarker.climateScore.grade)}
+                      title="Climate Score"
+                      description={selectedMarker.climateScore.description}
+                    />
+                  </List.Item>
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={makeGradeIcon(selectedMarker.soilScore.grade)}
+                      title="Soil Score"
+                      description={selectedMarker.soilScore.description}
+                    />
+                  </List.Item>
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={makeGradeIcon(selectedMarker.totalScore.grade)}
+                      title="Total Score"
+                      description={selectedMarker.totalScore.description}
+                    />
+                  </List.Item>
+                </List>
+              </Card>
+            </div>
+          )}
           <MapComponent
             zoom={zoom}
             center={center}
             markerData={markers}
             onCenterChanged={handleCenterChanged}
             onMarkerClick={handleMarkerClicked}
+            onClick={handleEmptyClicked}
           />
         </div>
       </Col>
