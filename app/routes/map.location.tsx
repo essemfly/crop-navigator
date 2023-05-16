@@ -73,6 +73,12 @@ const MapCropComponent: React.FC = () => {
     }
   };
 
+  let tempCenter: LatLng = { lat: 37.5665, lng: 126.978 };
+
+  const handleCenterChanged = (evt: any) => {
+    tempCenter = { lat: evt.lat(), lng: evt.lng() };
+  };
+
   return (
     <Row gutter={[16, 16]}>
       <Col xs={48} md={24}>
@@ -101,7 +107,14 @@ const MapCropComponent: React.FC = () => {
         )}
       </Col>
       <Col xs={32} md={16}>
-        {!selectedResult && <MapComponent center={latLng} markers={[null]} />}
+        {!selectedResult && (
+          <MapComponent
+            center={latLng}
+            markerData={[]}
+            onCenterChanged={handleCenterChanged}
+            onMarkerClick={null}
+          />
+        )}
         {selectedResult && <CropInfo />}
       </Col>
     </Row>

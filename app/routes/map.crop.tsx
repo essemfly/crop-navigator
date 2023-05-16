@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 import { Row, Col, Button, Radio, Card } from "antd";
 import MapComponent from "app/components/googleMapComponent";
@@ -19,22 +19,63 @@ const cardStyle: React.CSSProperties = {
   zIndex: 1,
 };
 
+interface MapData {
+  center: google.maps.LatLngLiteral;
+  markers: MarkerData[];
+}
+
+interface MarkerData {
+  position: google.maps.LatLngLiteral;
+  selected: boolean;
+}
+
 const MapLocationComponent: React.FC = () => {
   const [cropHouseType, setCropHouseType] = useState<string>("ground");
   const [crops, setCrops] = useState<Crop[]>([]);
   const [selectedCrop, setSelectedCrop] = useState<Crop>();
-  const [markers, setMarkers] = useState<LatLng[]>([]);
+  // const [markers, setMarkers] = useState<LatLng[]>([]);
   const [selectedMarker, setSelectedMarker] = useState();
+  // const [center, setCenter] = useState<LatLng>({ lat: 37.5665, lng: 126.978 });
 
-  const handleSearch = () => {
-    setMarkers([
-      { lat: 37.5665, lng: 126.978 },
-      { lat: 37.5665, lng: 126.979 },
-      { lat: 37.5665, lng: 126.98 },
-    ]);
+  const [mapData, setMapData] = useState<MapData>({
+    center: { lat: 37.7749, lng: -122.4194 },
+    markers: [],
+  });
+
+  const { center, markers } = mapData;
+
+  let tempCenter: LatLng = { lat: 37.5665, lng: 126.978 };
+
+  const handleCenterChanged = (evt: any) => {
+    tempCenter = { lat: evt.lat(), lng: evt.lng() };
   };
 
-  const defaultLatLng = { lat: 37.5665, lng: 126.978 };
+  const handleMarkerClicked = (idx: number) => {
+    mapData.markers[idx].selected = true;
+    mapData.markers.forEach((marker, index) => {
+      if (index !== idx) {
+        marker.selected = false;
+      }
+    });
+    mapData.center = mapData.markers[idx].position;
+    setMapData({ ...mapData });
+  };
+
+  const handleSearch = () => {
+    const newMarkerData: MarkerData[] = [
+      { position: { lat: 37.7449, lng: -122.3794 }, selected: false },
+      { position: { lat: 37.7749, lng: -122.4094 }, selected: false },
+      { position: { lat: 37.7949, lng: -122.4394 }, selected: false },
+    ];
+
+    console.log("map data", mapData);
+    setMapData((prevData) => ({
+      ...prevData,
+      markers: newMarkerData,
+      center:
+        newMarkerData.length > 0 ? newMarkerData[0].position : prevData.center,
+    }));
+  };
 
   return (
     <Row gutter={[16, 16]}>
@@ -96,7 +137,12 @@ const MapLocationComponent: React.FC = () => {
               </Card>
             </div>
           )}
-          <MapComponent center={defaultLatLng} markers={markers} />
+          <MapComponent
+            center={center}
+            markerData={markers}
+            onCenterChanged={handleCenterChanged}
+            onMarkerClick={handleMarkerClicked}
+          />
         </div>
       </Col>
     </Row>
