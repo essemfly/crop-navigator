@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import { Row, Col, Input, Button, Radio } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
-import type { LatLng, Location } from "~/models/location.server";
+import type { LatLng, LocationWithRecord } from "~/models/location.server";
 import type { SearchResult } from "~/models/score.server";
 
 import MapComponent from "app/components/googleMapComponent";
@@ -16,8 +16,12 @@ const MapCropComponent: React.FC = () => {
   const [selectedResult, setSelectedResult] = useState<SearchResult | null>(
     null
   );
-  const [locationInfo, setLocationInfo] = useState<Location | null>(null);
+  const [locationInfo, setLocationInfo] = useState<LocationWithRecord | null>(
+    null
+  );
   const [latLng, setLatLng] = useState<LatLng>({ lat: 37.5665, lng: 126.978 });
+
+  const zoomLevel = 12;
 
   useEffect(() => {
     if (searchValue === "") {
@@ -58,8 +62,10 @@ const MapCropComponent: React.FC = () => {
         const longitude = +firstResult.x;
         setLatLng({ lat: latitude, lng: longitude });
         setLocationInfo({
-          name: firstResult.address_name,
-          latLng: { lat: latitude, lng: longitude },
+          location: {
+            name: firstResult.address_name,
+            latLng: { lat: latitude, lng: longitude },
+          },
           soilRecords: [],
           climateRecords: [],
         });
@@ -109,6 +115,7 @@ const MapCropComponent: React.FC = () => {
       <Col xs={32} md={16}>
         {!selectedResult && (
           <MapComponent
+            zoom={zoomLevel}
             center={latLng}
             markerData={[]}
             onCenterChanged={handleCenterChanged}

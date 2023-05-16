@@ -19,6 +19,7 @@ const mapStyles = [
 ];
 
 const MapComponent = ({
+  zoom,
   center,
   markerData,
   onCenterChanged,
@@ -59,14 +60,13 @@ const MapComponent = ({
     <GoogleMap
       id="map"
       center={center}
-      zoom={13}
+      zoom={zoom}
       onLoad={onMapLoad}
       onUnmount={onUnmount}
       onCenterChanged={handleCenterChanged}
       mapContainerStyle={containerStyle}
       options={{ styles: mapStyles }}
     >
-      {/* {map && <Marker position={center} map={map} />} */}
       {loadedMarkers.map((marker, index) => (
         <Marker
           key={index}

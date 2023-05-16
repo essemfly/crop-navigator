@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Row, Col, Button, Radio, Card } from "antd";
 import MapComponent from "app/components/googleMapComponent";
 import type { Crop } from "@prisma/client";
-import type { LatLng } from "~/models/location.server";
+import type { LocationWithRecord } from "~/models/location.server";
 
 const containerStyle: React.CSSProperties = {
   width: "100%",
@@ -22,11 +22,13 @@ const cardStyle: React.CSSProperties = {
 interface MapData {
   center: google.maps.LatLngLiteral;
   markers: MarkerData[];
+  zoom: number;
 }
 
 interface MarkerData {
   position: google.maps.LatLngLiteral;
   selected: boolean;
+  locationInfo: LocationWithRecord;
 }
 
 const MapLocationComponent: React.FC = () => {
@@ -38,16 +40,15 @@ const MapLocationComponent: React.FC = () => {
   // const [center, setCenter] = useState<LatLng>({ lat: 37.5665, lng: 126.978 });
 
   const [mapData, setMapData] = useState<MapData>({
-    center: { lat: 37.7749, lng: -122.4194 },
+    center: { lat: 1.392854, lng: 103.781753 },
     markers: [],
+    zoom: 9,
   });
 
-  const { center, markers } = mapData;
-
-  let tempCenter: LatLng = { lat: 37.5665, lng: 126.978 };
+  const { center, markers, zoom } = mapData;
 
   const handleCenterChanged = (evt: any) => {
-    tempCenter = { lat: evt.lat(), lng: evt.lng() };
+    console.log({ lat: evt.lat(), lng: evt.lng() });
   };
 
   const handleMarkerClicked = (idx: number) => {
@@ -58,14 +59,48 @@ const MapLocationComponent: React.FC = () => {
       }
     });
     mapData.center = mapData.markers[idx].position;
+    mapData.zoom = 14;
     setMapData({ ...mapData });
   };
 
   const handleSearch = () => {
     const newMarkerData: MarkerData[] = [
-      { position: { lat: 37.7449, lng: -122.3794 }, selected: false },
-      { position: { lat: 37.7749, lng: -122.4094 }, selected: false },
-      { position: { lat: 37.7949, lng: -122.4394 }, selected: false },
+      {
+        position: { lat: 4.4697884, lng: 101.3879094 },
+        selected: false,
+        locationInfo: {
+          location: {
+            name: "Tanah Tinggi Cameron",
+            latLng: { lat: 4.4697884, lng: 101.3879094 },
+          },
+          soilRecords: [],
+          climateRecords: [],
+        },
+      },
+      {
+        position: { lat: 4.2107164, lng: 101.1248754 },
+        selected: false,
+        locationInfo: {
+          location: {
+            name: "Tapah",
+            latLng: { lat: 4.2107164, lng: 101.1248754 },
+          },
+          soilRecords: [],
+          climateRecords: [],
+        },
+      },
+      {
+        position: { lat: 4.8606984, lng: 101.6050897 },
+        selected: false,
+        locationInfo: {
+          location: {
+            name: "Gua Musang",
+            latLng: { lat: 4.8606984, lng: 101.6050897 },
+          },
+          soilRecords: [],
+          climateRecords: [],
+        },
+      },
     ];
 
     console.log("map data", mapData);
@@ -138,6 +173,7 @@ const MapLocationComponent: React.FC = () => {
             </div>
           )}
           <MapComponent
+            zoom={zoom}
             center={center}
             markerData={markers}
             onCenterChanged={handleCenterChanged}

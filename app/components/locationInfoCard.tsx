@@ -1,6 +1,6 @@
 import { Card } from "antd";
 import type { Crop } from "@prisma/client";
-import type { Location } from "~/models/location.server";
+import type { LocationWithRecord } from "~/models/location.server";
 
 export interface SearchResult {
   id: number;
@@ -10,7 +10,7 @@ export interface SearchResult {
 }
 
 interface LocationProps {
-  locationInfo: Location;
+  locationInfo: LocationWithRecord;
 }
 
 const LocationInfoCard: React.FC<LocationProps> = ({ locationInfo }) => {
@@ -18,7 +18,7 @@ const LocationInfoCard: React.FC<LocationProps> = ({ locationInfo }) => {
     <Card className={`crop-card location-card`} style={{ marginBottom: 10 }}>
       <div style={{ display: "flex" }}>
         <div style={{ marginLeft: 16 }}>
-          <h2 style={{ marginBottom: 5 }}>{locationInfo.name}</h2>
+          <h2 style={{ marginBottom: 5 }}>{locationInfo.location.name}</h2>
           <p>평균습도: info fix required</p>
           <p>평균강수량: info fix required</p>
           <p>평균온도: info fix required</p>

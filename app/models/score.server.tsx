@@ -1,15 +1,18 @@
 import { getRandomCrops } from "./crop.server";
 import type { Crop } from "@prisma/client";
-import type { Location } from "~/models/location.server";
-import type { SoilRecord, ClimateRecord } from "~/models/nature.server";
 
-export interface Score {
+export interface ScoreForm {
   grade: string;
   score: number;
-  crop: Crop;
+  description: string;
+}
+
+export interface Score {
   location: Location;
-  SoilRecords: SoilRecord[];
-  ClimateRecords: ClimateRecord[];
+  crop: Crop;
+  soilScore: ScoreForm;
+  climateScore: ScoreForm;
+  totalScore: ScoreForm;
 }
 
 export interface SearchResult {

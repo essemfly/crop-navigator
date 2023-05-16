@@ -8,13 +8,10 @@ export interface LatLng {
 export interface Location {
   name: string;
   latLng: LatLng;
-  soilRecords: SoilRecord[];
-  climateRecords: ClimateRecord[];
 }
 
-export interface Score {}
-
-export interface LocationScore {
+export interface LocationWithRecord {
   location: Location;
-  soilScore: Score;
+  soilRecords: SoilRecord[];
+  climateRecords: ClimateRecord[];
 }
