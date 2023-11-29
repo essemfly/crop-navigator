@@ -27,7 +27,7 @@ const MapComponent = ({
   onClick,
 }) => {
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyBIAVCWoBcNFcjxklrWfD3dSGHTajsJ0KQ",
+    googleMapsApiKey: process.env.NEXT_PUBLIC_API_KEY,
   });
 
   const [map, setMap] = useState(null);
